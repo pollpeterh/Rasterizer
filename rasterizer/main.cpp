@@ -14,7 +14,7 @@ void process(image& img, const std::vector<tri>& tf);
 
 int main(int argc, const char * argv[])
 {
-	const std::string FILE_NAME = "test1";
+	const std::string FILE_NAME = "test3";
 	std::ifstream in(FILE_NAME + ".tri");
 	std::vector<tri> triFile;
 	point3 p;
