@@ -24,7 +24,8 @@ double f(double x, double y, double x0, double y0, double x1, double y1) // stat
 	return ((y0 - y1) * x) + ((x1 - x0) * y) + (x0 * y1) - (x1 * y0);
 }
 
-class image {
+class image
+{
 public:
     image(int w = 600, int h = 400, const rgb& bkgnd = BLACK);
     ~image() { delete [] pixels; }
@@ -54,7 +55,12 @@ inline void image::set(int i, int j, const rgb& c) {
 inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, const rgb& c1, const point3& p2, const rgb& c2)
 {
 	const double MIN = -0.000000001;
-	double x, y, x0, y0, x1, y1;
+    double x0 = p0[0];
+    double y0 = p0[1];
+    double x1 = p1[0];
+    double y1 = p1[1];
+    double x2 = p2[0];
+    double y2 = p2[1];
 
 	// bounding box
 	int xmin = int(floor(fmin(x, fmin(x0, x1))));
@@ -66,9 +72,9 @@ inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, c
 	for (int i = xmin; i < xmax; i++) {
 		for (int j = ymin; j < ymax; j++) {
 			// calculate alpha, beta, gamma
-			double alpha;	// = ??
-			double beta;	// = ??
-			double gamma;	// = ??
+            double beta = f(i, j, x0, y0, x2, y2) / f(x1, y1, x0, y0, x2, y2);
+            double gamma = f(i, j, x0, y0, x1, y1) / f(x2, y2, x0, y0, x1, y1);
+            double alpha = 1 - beta - gamma;
 			//if alpha, beta, gamma >= -0.00000001
 			if (alpha >= MIN && beta >= MIN && gamma >= MIN) {
 				rgb color = alpha * c0 + beta * c1 + gamma * c2;

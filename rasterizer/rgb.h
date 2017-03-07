@@ -11,7 +11,8 @@
 
 #include <cmath>
 
-int toInt(double s) {
+int toInt(double s)
+{
     // given s in [0,1] returns int 0..255
     // sqrt does simple gamma correction (gamma = 2)
     if (s >= 1) return 255;
@@ -19,14 +20,25 @@ int toInt(double s) {
     return int(255.999 * sqrt(s));
 }
 
-double toDouble(int i)
+float toFloat(int i)
 {
 	if (i >= 255) return 1;
 	if (i < 0) return 0;
-	return 0; // TODO: finish this
+    return i / 255;
 }
 
-class rgb {
+rgb& clamp(const rgb& c)
+{
+    double max = fmax(c.r(), fmax(c.g(), c.b()));
+    rgb color = rgb(c);
+    if (max > 1){
+        color /= max;
+    }
+    return color;
+}
+
+class rgb
+{
 public:
     rgb(float r = 0, float g = 0, float b = 0) : red(r), green(g), blue(b) {}
     rgb(const rgb& c) : red(c.r()), green(c.g()), blue(c.b()) {}
@@ -43,6 +55,8 @@ public:
     rgb& operator/=(const rgb& c);
     rgb& operator*=(double s);
     rgb& operator/=(double s);
+    
+    friend std::istream& operator >> (std::istream& is, rgb& c);
     
 private:
     float red, green, blue;
@@ -135,12 +149,18 @@ inline const rgb operator/(const rgb& c, const double s) {
 }
 
 inline std::ostream& operator<<(std::ostream& o, const rgb& c) {
-    return o << toInt(c.r()) << " " << toInt(c.g()) << " " << toInt(c.b());
+    rgb& clamped = clamp(c);
+    return o << toInt(clamped.r()) << " " << toInt(clamped.g()) << " " << toInt(clamped.b());
 }
 
 inline std::istream& operator >> (std::istream& is, rgb& c)
 {
-	return is >> toDouble(c.r()) >> toDouble(c.g()) >> toDouble(c.b());
+    int red, green, blue;
+    is >> red >> green >> blue;
+    c.red = toFloat(red);
+    c.green = toFloat(green);
+    c.blue = toFloat(blue);
+    return is;
 }
 
 #endif /* rgb_h */
