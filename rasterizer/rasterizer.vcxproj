@@ -142,12 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\RayTracer2\RayTracer2\RayTracer2\image.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\RayTracer2\RayTracer2\RayTracer2\point3.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\RayTracer2\RayTracer2\RayTracer2\rgb.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClInclude Include="image.h" />
+    <ClInclude Include="point3.h" />
+    <ClInclude Include="rgb.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
