@@ -29,5 +29,13 @@
     <ClInclude Include="image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test3.tri" />
+    <None Include="test1.tri" />
+    <None Include="test2.tri" />
   </ItemGroup>
 </Project>

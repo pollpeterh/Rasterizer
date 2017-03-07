@@ -5,14 +5,14 @@
 //  Created by JohnsonM on 1/15/17.
 //  Copyright © 2017 Central College. All rights reserved.
 //
+#pragma once
 
 #ifndef rgb_h
 #define rgb_h
 
 #include <cmath>
 
-int toInt(double s)
-{
+int toInt(double s) {
     // given s in [0,1] returns int 0..255
     // sqrt does simple gamma correction (gamma = 2)
     if (s >= 1) return 255;
@@ -20,25 +20,13 @@ int toInt(double s)
     return int(255.999 * sqrt(s));
 }
 
-float toFloat(int i)
-{
+float toFloat(int i) {
 	if (i >= 255) return 1;
 	if (i < 0) return 0;
-    return i / 255;
+    return float(i) / 255;
 }
 
-rgb& clamp(const rgb& c)
-{
-    double max = fmax(c.r(), fmax(c.g(), c.b()));
-    rgb color = rgb(c);
-    if (max > 1){
-        color /= max;
-    }
-    return color;
-}
-
-class rgb
-{
+class rgb {
 public:
     rgb(float r = 0, float g = 0, float b = 0) : red(r), green(g), blue(b) {}
     rgb(const rgb& c) : red(c.r()), green(c.g()), blue(c.b()) {}
@@ -61,6 +49,16 @@ public:
 private:
     float red, green, blue;
 };
+
+rgb clamp(const rgb& c)
+{
+	double max = fmax(c.r(), fmax(c.g(), c.b()));
+	rgb color(c);
+	if (max > 1) {
+		color /= max;
+	}
+	return color;
+}
 
 const static rgb BLACK(0, 0, 0); 
 const static rgb RED(1, 0, 0);

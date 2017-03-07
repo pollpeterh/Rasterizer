@@ -63,10 +63,10 @@ inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, c
     double y2 = p2[1];
 
 	// bounding box
-	int xmin = int(floor(fmin(x, fmin(x0, x1))));
-	int xmax = int(ceil( fmax(x, fmax(x0, x1))));
-	int ymin = int(floor(fmin(y, fmin(y0, y1))));
-	int ymax = int(ceil( fmax(y, fmax(y0, y1))));
+	int xmin = int(floor(fmin(x0, fmin(x1, x2))));
+	int xmax = int(ceil( fmax(x0, fmax(x1, x2))));
+	int ymin = int(floor(fmin(y0, fmin(y1, y2))));
+	int ymax = int(ceil( fmax(y0, fmax(y1, y2))));
 
 	//foreach pixel in bounding box
 	for (int i = xmin; i < xmax; i++) {

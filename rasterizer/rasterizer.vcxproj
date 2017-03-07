@@ -148,6 +148,12 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="point3.h" />
     <ClInclude Include="rgb.h" />
+    <ClInclude Include="vec3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test1.tri" />
+    <None Include="test2.tri" />
+    <None Include="test3.tri" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
