@@ -16,14 +16,6 @@
 
 double f(double x, double y, double x0, double y0, double x1, double y1)
 {
-	if (x0 > x1) {
-		double temp = x0;
-		x0 = x1;
-		x1 = temp;
-		temp = y0;
-		y0 = y1;
-		y1 = temp;
-	}
 	return ((y0 - y1) * x) + ((x1 - x0) * y) + (x0 * y1) - (x1 * y0);
 }
 

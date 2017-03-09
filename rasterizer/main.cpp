@@ -3,40 +3,15 @@
 #include <vector>
 #include "image.h"
 
-struct tri {
-	point3 points[3];
-	rgb colors[3];
-
-	tri() { }
-};
-
-void process(image& img, const std::vector<tri>& tf);
+void process(image& img, std::ifstream& in);
 
 int main(int argc, const char * argv[])
 {
-	const std::string FILE_NAME = "test3";
-	std::ifstream in(FILE_NAME + ".tri");
-	std::vector<tri> triFile;
-	point3 p;
-	rgb c;
-	tri triangle;
-	int count = 0;
-	while (in >> p >> c) {
-
-		triangle.points[count] = p;
-		triangle.colors[count] = c;
-
-		if (count == 2) {
-			triFile.push_back(triangle);
-			triangle = tri();
-			count = -1;
-		}
-
-		count++;
-	}
+	const std::string FILE_NAME = "test1";
 
 	image img = image(500, 500, WHITE);
-	process(img, triFile);
+	std::ifstream in(FILE_NAME + ".tri");
+	process(img, in);
 	std::ofstream out(FILE_NAME + "_img.ppm");
 	out << img;
 	out.close();
@@ -44,16 +19,11 @@ int main(int argc, const char * argv[])
 	return 0;
 }
 
-void process(image& img, const std::vector<tri>& tf)
+void process(image& img, std::ifstream& in)
 {
-	for (int i = 0; i < tf.size(); i++) {
-		point3 a = tf[i].points[0];
-		point3 b = tf[i].points[1];
-		point3 c = tf[i].points[2];
-		rgb ac = tf[i].colors[0];
-		rgb bc = tf[i].colors[1];
-		rgb cc = tf[i].colors[2];
-
-		img.triangle(a, ac, b, bc, c, cc);
+	point3 p0, p1, p2;
+	rgb c0, c1, c2;
+	while (in >> p0 >> c0 >> p1 >> c1 >> p2 >> c2) {
+		img.triangle(p0, c0, p1, c1, p2, c2);
 	}
 }
