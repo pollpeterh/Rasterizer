@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include "image.h"
 
 void process(image& img, std::ifstream& in);
