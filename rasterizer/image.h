@@ -42,7 +42,7 @@ private:
 // member functions
 
 inline void image::set(int i, int j, const rgb& c) {
-	if ((i >= 0 || i < width) || (j >= 0 || j < height)) {
+	if ((i >= 0 && i < width) && (j >= 0 && j < height)) {
 		pixels[i][j] = c;
 	}
 }
@@ -64,16 +64,16 @@ inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, c
 	int ymax = int(ceil( fmax(y0, fmax(y1, y2))));
 
 	//foreach pixel in bounding box
-	for (int i = xmin; i < xmax; i++) {
-		for (int j = ymin; j < ymax; j++) {
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
 			// calculate alpha, beta, gamma
-            double beta = f(i, j, x0, y0, x2, y2) / f(x1, y1, x0, y0, x2, y2);
-            double gamma = f(i, j, x0, y0, x1, y1) / f(x2, y2, x0, y0, x1, y1);
+            double beta = f(x, y, x0, y0, x2, y2) / f(x1, y1, x0, y0, x2, y2);
+            double gamma = f(x, y, x0, y0, x1, y1) / f(x2, y2, x0, y0, x1, y1);
             double alpha = 1 - beta - gamma;
 			//if alpha, beta, gamma >= -0.00000001
-			if (alpha >= MIN && beta >= MIN && gamma >= MIN) {
+			if (alpha > MIN && beta > MIN && gamma > MIN) {
 				rgb color = alpha * c0 + beta * c1 + gamma * c2;
-				set(i, j, color);
+				set(x, y, color);
 			}
 		}
 	}	

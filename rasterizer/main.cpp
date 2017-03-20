@@ -6,10 +6,14 @@ void process(image& img, std::ifstream& in);
 
 int main(int argc, const char * argv[])
 {
-	const std::string FILE_NAME = "test1";
+	const std::string FILE_NAME = "test2";
 
 	image img = image(500, 500, WHITE);
 	std::ifstream in(FILE_NAME + ".tri");
+	if (!in.good()) {
+		std::cerr << "File not found." << std::endl;
+		exit(-1);
+	}
 	process(img, in);
 	std::ofstream out(FILE_NAME + "_img.ppm");
 	out << img;

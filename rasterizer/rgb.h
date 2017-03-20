@@ -147,7 +147,7 @@ inline const rgb operator/(const rgb& c, const double s) {
 }
 
 inline std::ostream& operator<<(std::ostream& o, const rgb& c) {
-    rgb& clamped = clamp(c);
+    rgb clamped = clamp(c);
     return o << toInt(clamped.r()) << " " << toInt(clamped.g()) << " " << toInt(clamped.b());
 }
 
