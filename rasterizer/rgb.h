@@ -10,7 +10,7 @@
 #ifndef rgb_h
 #define rgb_h
 
-#include <cmath>
+#include <math.h>
 
 int toInt(double s) {
     // given s in [0,1] returns int 0..255

@@ -9,6 +9,8 @@
 #ifndef vec3_h
 #define vec3_h
 
+#include <math.h>
+
 class vec3 {
 public:
     vec3(double v0 = 0, double v1 = 0, double v2 = 0) { v[0] = v0; v[1] = v1; v[2] = v2; }
