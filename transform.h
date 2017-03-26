@@ -80,14 +80,12 @@ transform& transform::operator*=(const transform& t) {
     // TODO: compute inv = t.inv * tmp.inv
     for (int r = 0; r < 4; r++) {
         for (int c = 0; c < 4; c++) {
-            int val = 0;
-            int invVal = 0;
+            m[r][c] = 0;
+            inv[r][c] = 0;
             for (int i = 0; i < 4; i++) {
-                val += tmp.m[r][i] * t.m[i][c];
-                invVal += t.inv[r][i] * tmp.inv[i][c];
+                m[r][c] += tmp.m[r][i] * t.m[i][c];
+                inv[r][c] += t.inv[r][i] * tmp.inv[i][c];
             }
-            m[r][c] = val;
-            inv[r][c] = invVal;
         }
     }
     
@@ -96,8 +94,12 @@ transform& transform::operator*=(const transform& t) {
 
 const vec3 transform::transformNormal(const vec3& n) const {
     vec3 result;
-    // TODO: compute result
-//    result = *this * n;
+    // transpose
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            result[r] += inv[c][r] * n[r];
+        }
+    }
     return result;
 }
 
@@ -107,9 +109,9 @@ const point3 operator*(const transform& t, const point3& p) {
     hvec result;
     hvec position(p);
     // TODO: compute result
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            result[i] += t.m[i][j] * position[i];
+    for (int r = 0; r < 4; r++) {
+        for (int c = 0; c < 4; c++) {
+            result[r] += t.m[r][c] * position[r];
         }
     }
     return result.to_point3();
@@ -119,9 +121,9 @@ const vec3 operator*(const transform& t, const vec3& v) {
     hvec result;
     hvec direction(v);
     // TODO: compute result
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            result[i] += t.m[i][j] * direction[i];
+    for (int r = 0; r < 4; r++) {
+        for (int c = 0; c < 4; c++) {
+            result[r] += t.m[r][c] * direction[r];
         }
     }
     return result.to_vec3();
@@ -140,11 +142,11 @@ const transform translate(const vec3& v) {
 const transform scale(const vec3& v) {
     transform t;
     // TODO: set t to scale according to the entries in v (m and inv)
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if(i == j) {
-                t.m[i][j] = v[i];
-                t.inv[i][j] = 1/v[i];
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            if(r == c) {
+                t.m[r][c] = v[r];
+                t.inv[r][c] = 1/v[r];
             }
         }
     }
@@ -153,7 +155,14 @@ const transform scale(const vec3& v) {
 
 const transform rotUVW(const vec3& u, const vec3& v, const vec3& w) {
     transform t;
+    vec3 vecs[3] = {u, v, w};
     // TODO: set t to rotation R_uvw (m and inv) - assume uvw is an orthonormal basis
+    for (int r = 0; r < 3; r++) {
+        for (int c = 0; c < 3; c++) {
+            t.m[r][c] = vecs[r][c];
+            t.inv[r][c] = vecs[c][r];
+        }
+    }
     return t;
 }
 
