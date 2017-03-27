@@ -50,7 +50,6 @@ transform::transform() {
 }
 
 transform::transform(const transform& t) {
-    // TODO: copy m and inv of t to this
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             m[i][j] = t.m[i][j];
@@ -61,7 +60,6 @@ transform::transform(const transform& t) {
 
 transform& transform::operator=(const transform& t) {
     if (this != &t) { // avoid self-assignment
-        // TODO: copy m and inv of t to this
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 m[i][j] = t.m[i][j];
@@ -75,9 +73,6 @@ transform& transform::operator=(const transform& t) {
 transform& transform::operator*=(const transform& t) {
     // save copy of current matrix
     transform tmp = *this;
-    
-    // TODO: compute m = this * t = tmp * t
-    // TODO: compute inv = t.inv * tmp.inv
     for (int r = 0; r < 4; r++) {
         for (int c = 0; c < 4; c++) {
             m[r][c] = 0;
@@ -94,9 +89,9 @@ transform& transform::operator*=(const transform& t) {
 
 const vec3 transform::transformNormal(const vec3& n) const {
     vec3 result;
-    // transpose
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
+            // transpose: flip r and c
             result[r] += inv[c][r] * n[r];
         }
     }
@@ -108,10 +103,9 @@ const vec3 transform::transformNormal(const vec3& n) const {
 const point3 operator*(const transform& t, const point3& p) {
     hvec result;
     hvec position(p);
-    // TODO: compute result
     for (int r = 0; r < 4; r++) {
         for (int c = 0; c < 4; c++) {
-            result[r] += t.m[r][c] * position[r];
+            result[r] += t.m[r][c] * position[c];
         }
     }
     return result.to_point3();
@@ -120,10 +114,9 @@ const point3 operator*(const transform& t, const point3& p) {
 const vec3 operator*(const transform& t, const vec3& v) {
     hvec result;
     hvec direction(v);
-    // TODO: compute result
     for (int r = 0; r < 4; r++) {
         for (int c = 0; c < 4; c++) {
-            result[r] += t.m[r][c] * direction[r];
+            result[r] += t.m[r][c] * direction[c];
         }
     }
     return result.to_vec3();
@@ -131,7 +124,6 @@ const vec3 operator*(const transform& t, const vec3& v) {
 
 const transform translate(const vec3& v) {
     transform t;
-    // TODO: set t to translate according to the entries in v (m and inv)
     for (int i = 0; i < 3; i ++) {
         t.m[i][3] = v[i];
         t.inv[i][3] = -v[i];
@@ -141,7 +133,6 @@ const transform translate(const vec3& v) {
 
 const transform scale(const vec3& v) {
     transform t;
-    // TODO: set t to scale according to the entries in v (m and inv)
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
             if(r == c) {
@@ -156,7 +147,6 @@ const transform scale(const vec3& v) {
 const transform rotUVW(const vec3& u, const vec3& v, const vec3& w) {
     transform t;
     vec3 vecs[3] = {u, v, w};
-    // TODO: set t to rotation R_uvw (m and inv) - assume uvw is an orthonormal basis
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
             t.m[r][c] = vecs[r][c];
