@@ -24,7 +24,7 @@ public:
     
     hvec& operator=(const hvec& other) { v[0] = other[0]; v[1] = other[1]; v[2] = other[2]; v[3] = other[3]; return *this;}
     
-    const point3 to_point3() const { return point3(v[0], v[1], v[2]); }
+    const point3 to_point3() const { return point3(v[0]/v[3], v[1]/v[3], v[2]/v[3]); }
     const vec3 to_vec3() const { return vec3(v[0], v[1], v[2]); }
 
 private:

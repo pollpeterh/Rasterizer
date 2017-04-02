@@ -28,7 +28,13 @@ public:
     friend const transform translate(const vec3& v);
     friend const transform scale(const vec3& v);
     friend const transform rotUVW(const vec3& u, const vec3& v, const vec3& w);
+    friend const transform persp(float near, float far);
     friend std::ostream& operator<<(std::ostream& o, const transform& t);
+    
+    const transform viewport(int width, int height);
+    const transform ortho(float left, float right, float bottom, float top, float near, float far);
+    const transform camera(point3& eye, const vec3& gaze, const vec3& up);
+    const transform lookAt(point3& eye, const point3& center, const vec3& up);
 private:
     double m[4][4];
     double inv[4][4];
@@ -156,6 +162,25 @@ const transform rotUVW(const vec3& u, const vec3& v, const vec3& w) {
     return t;
 }
 
+const transform persp(float near, float far) {
+    transform t;
+    t.m[0][0] = near;
+    t.m[1][1] = near;
+    t.m[2][2] = near + far;
+    t.m[2][3] = -far * near;
+    t.m[3][2] = 1;
+    t.m[3][3] = 0;
+    
+    t.inv[0][0] = far;
+    t.inv[1][1] = far;
+    t.inv[2][2] = 0;
+    t.inv[2][3] = far * near;
+    t.inv[3][2] = -1;
+    t.inv[3][3] = near + far;
+    
+    return t;
+}
+
 std::ostream& operator<<(std::ostream& o, const transform& t) {
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; col++) {
@@ -196,6 +221,28 @@ const transform rotZ(double theta) {
     vec3 u(cos(theta), -sin(theta), 0);
     vec3 v(sin(theta), cos(theta), 0);
     return rotUVW(u, v, w);
+}
+
+const transform camera(point3& eye, const vec3& gaze, const vec3& up) {
+    vec3 w = -normalize(gaze);
+    vec3 u = normalize(cross(up, w));
+    vec3 v = cross(w, u);
+    
+    transform t =rotUVW(u, v, w) * translateTo(-eye);
+    std::cout << t;
+    return t;
+}
+
+const transform lookAt(point3& eye, const point3& center, const vec3& up) {
+    return camera(eye, center - eye, up);
+}
+
+const transform viewport(int width, int height) {
+    return translate(-0.5, -0.5, 0) * scale(width/2, height/2, 1) * translate(1, 1, 0);;
+}
+
+const transform ortho(float left, float right, float bottom, float top, float near, float far) {
+    return translate(-1, -1, -1) * scale(2/(right - left), 2/(top - bottom), 2/(near - far)) * translate(-left, -bottom, -far);
 }
 
 #endif /* transform_h */

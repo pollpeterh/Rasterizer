@@ -27,7 +27,7 @@ public:
     image(const image& other);
     image& operator=(const image& other);
     
-    void set(int i, int j, const rgb& c);
+    void set(int i, int j, float z, const rgb& c);
 	void triangle(const point3& p0, const rgb& c0, const point3& p1, const rgb& c1, const point3& p2, const rgb& c2);
 
     friend std::ostream& operator<<(std::ostream& o, const image& im);
@@ -36,14 +36,16 @@ private:
     int width;
     int height;
     rgb **pixels;
+    float **zbuf;
     void copy(const image& other);
 };
 
 // member functions
 
-inline void image::set(int i, int j, const rgb& c) {
-	if ((i >= 0 && i < width) && (j >= 0 && j < height)) {
-		pixels[i][j] = c;
+inline void image::set(int x, int y, float z, const rgb& c) {
+	if ((x >= 0 && x < width) && (y >= 0 && y < height) && (z > zbuf[x][y])) { // i had to flip this
+		pixels[x][y] = c;
+        zbuf[x][y] = z;
 	}
 }
 
@@ -73,7 +75,8 @@ inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, c
 			//if alpha, beta, gamma >= -0.00000001
 			if (alpha > MIN && beta > MIN && gamma > MIN) {
 				rgb color = alpha * c0 + beta * c1 + gamma * c2;
-				set(x, y, color);
+                float z = alpha * p0[2] + beta * p1[2] + gamma * p2[2];
+				set(x, y, z, color);
 			}
 		}
 	}	
@@ -81,10 +84,13 @@ inline void image::triangle(const point3& p0, const rgb& c0, const point3& p1, c
 
 image::image(int w, int h, const rgb& bkgnd) : width(w), height(h) {
     pixels = new rgb*[width];
+    zbuf = new float*[width];
     for (int i = 0; i < width; i++) {
         pixels[i] = new rgb[height];
+        zbuf[i] = new float[height];
         for (int j = 0; j < height; j++) {
             pixels[i][j] = bkgnd;
+            zbuf[i][j] = -2;
         }
     }
 }
@@ -96,6 +102,7 @@ image::image(const image& other) {
 image& image::operator=(const image& other) {
     if (this != &other) {
         delete [] pixels;
+        delete [] zbuf;
         copy(other);
     }
     return *this;
@@ -105,10 +112,13 @@ void image::copy(const image& other) {
     width = other.width;
     height = other.height;
     pixels = new rgb*[width];
+    zbuf = new float*[width];
     for (int i = 0; i < width; i++) {
         pixels[i] = new rgb[height];
+        zbuf[i] = new float[height];
         for (int j = 0; j < height; j++) {
             pixels[i][j] = other.pixels[i][j];
+            zbuf[i][j] = other.zbuf[i][j];
         }
     }
 }
