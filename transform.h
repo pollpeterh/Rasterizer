@@ -227,10 +227,8 @@ const transform camera(point3& eye, const vec3& gaze, const vec3& up) {
     vec3 w = -normalize(gaze);
     vec3 u = normalize(cross(up, w));
     vec3 v = cross(w, u);
-    
-    transform t =rotUVW(u, v, w) * translateTo(-eye);
-    std::cout << t;
-    return t;
+
+    return rotUVW(u, v, w) * translateTo(-eye);;
 }
 
 const transform lookAt(point3& eye, const point3& center, const vec3& up) {

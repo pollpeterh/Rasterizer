@@ -36,10 +36,11 @@ void process(std::ifstream& in, std::ofstream& out) {
     rgb ambient (0.3, 0.3, 0.3);
     rgb lightColor = WHITE;
     point3 lightPoint(-10, 10, 10);
-    glossyMaterial mat(rgb(0.1, 0.3, 0.5)); //glossy material on the object
+	rgb color = rgb(0.1, 0.3, 0.5);
+    glossyMaterial mat(color); //glossy material on the object
     point3 eye (3, 2.5, 5), center (0.5, 0, 0);
     vec3 up (0, 1, 0);
-    image img(width, height);
+    image img(width, height, WHITE);
     point3 p0, p1, p2;
     vec3 n0, n1, n2;
     rgb c0, c1, c2;
@@ -50,11 +51,11 @@ void process(std::ifstream& in, std::ofstream& out) {
         rgb colors[3];
         for (int i = 0; i < 3; i++) {
             // vector from point to light
-            vec3 l = lightPoint - points[i];
+            vec3 l = normalize(lightPoint - points[i]);
             // vector from point to eye
-            vec3 v = eye - points[i];
+            vec3 v = normalize(eye - points[i]);
             // half vector of l and -v
-            vec3 h = normalize(normalize(l) + normalize(-v));
+			vec3 h = normalize(l + v);
             colors[i] = mat.ka * ambient;
             rgb d = mat.kd * lightColor * fmax(0, dot(normals[i], l));
             rgb s = mat.ks * lightColor * pow(fmax(0, dot(normals[i], h)), mat.exponent);
