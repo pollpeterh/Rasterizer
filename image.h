@@ -43,7 +43,7 @@ private:
 // member functions
 
 inline void image::set(int x, int y, float z, const rgb& c) {
-	if ((x >= 0 && x < width) && (y >= 0 && y < height) && (z > zbuf[x][y])) { // i had to flip this
+	if ((x >= 0 && x < width) && (y >= 0 && y < height) && (z > zbuf[x][y])) { 
 		pixels[x][y] = c;
         zbuf[x][y] = z;
 	}
