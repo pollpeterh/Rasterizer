@@ -31,8 +31,8 @@ int main(int argc, const char * argv[]) {
 }
 
 void process(std::ifstream& in, std::ofstream& out) {
-    int width = 800, height = 600, scale = 300;
-    float left = -width/scale, right = width/scale, bottom = -height/scale, top = height/scale, near = -5, far = -15;
+	double width = 800, height = 600;
+	double scale = 300, left = -width / scale, right = width / scale, bottom = -height / scale, top = height / scale, near = -5, far = -15;
     rgb ambient (0.3, 0.3, 0.3);
     rgb lightColor = WHITE;
     point3 lightPoint(-10, 10, 10);
